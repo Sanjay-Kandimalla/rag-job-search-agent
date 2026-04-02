@@ -3,8 +3,9 @@ Profile Extractor - Uses Claude to extract a structured skills/experience
 profile from raw resume text.
 """
 
-import os
 import json
+import os
+
 from anthropic import Anthropic
 
 
