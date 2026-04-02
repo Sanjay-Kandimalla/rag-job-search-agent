@@ -1,0 +1,40 @@
+graph TB
+    subgraph UI["🖥️ Streamlit UI"]
+        A[📄 Upload Resume] --> B[🔍 Search Jobs]
+        B --> C[🎯 View Matches]
+        C --> D[✍️ Generate Cover Letter]
+    end
+
+    subgraph Processing["⚙️ Backend Pipeline"]
+        E[Resume Parser<br/>pypdf] --> F[Profile Extractor<br/>Claude API]
+        G[Job Fetcher<br/>JSearch API / CSV]
+    end
+
+    subgraph RAG["🧠 RAG Engine"]
+        H[Sentence-BERT<br/>all-MiniLM-L6-v2]
+        I[(ChromaDB<br/>Vector Store)]
+        J[Claude Sonnet 4<br/>Match Analyzer]
+
+        H -->|embed resume| I
+        H -->|embed jobs| I
+        I -->|top-k retrieval| J
+    end
+
+    subgraph Output["📊 Results"]
+        K[Match Score 0-100]
+        L[Skill Gap Analysis]
+        M[Tailored Cover Letter]
+    end
+
+    A --> E
+    B --> G
+    F --> RAG
+    G --> RAG
+    J --> K
+    J --> L
+    C --> M
+
+    style UI fill:#e0e7ff,stroke:#667eea,color:#1e1b4b
+    style RAG fill:#fef3c7,stroke:#f59e0b,color:#78350f
+    style Processing fill:#d1fae5,stroke:#10b981,color:#064e3b
+    style Output fill:#fce7f3,stroke:#ec4899,color:#831843
