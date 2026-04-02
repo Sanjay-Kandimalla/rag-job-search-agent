@@ -1,13 +1,13 @@
-# 🎯 RAG Job Search Agent
 
 **AI-powered job matching and cover letter generator using RAG (Retrieval-Augmented Generation)**
 
 Upload your resume → Search or upload jobs → Get AI-powered match scores, skill gap analysis, and tailored cover letters.
 
-[![CI](https://github.com/Sanjay-Kandimalla/rag-job-search-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/Sanjay-Kandimalla/rag-job-search-agent/actions/workflows/ci.yml)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-deployed-FF4B4B.svg)](https://streamlit.io)
+[![Streamlit](https://img.shields.io/badge/Streamlit-deployed-FF4B4B.svg)](https://rag-job-search-agent-6n5abkmuemkjkfrwdydjrz.streamlit.app/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+🔗 **[Live Demo](https://rag-job-search-agent-6n5abkmuemkjkfrwdydjrz.streamlit.app/)**
 
 ---
 
@@ -26,58 +26,52 @@ Most job seekers apply to hundreds of postings blindly. This tool uses **semanti
 ---
 
 ## 🏗️ Architecture
-
-```
 ┌─────────────────────────────────────────────────────────────────┐
 │                        STREAMLIT UI                             │
 │   Resume Upload │ Job Search │ Match Results │ Cover Letters    │
 └────────┬────────┴─────┬──────┴──────┬────────┴───────┬──────────┘
-         │              │             │                │
-         ▼              ▼             ▼                ▼
+│              │             │                │
+▼              ▼             ▼                ▼
 ┌─────────────┐  ┌────────────┐  ┌──────────────┐  ┌──────────────┐
 │   Resume    │  │    Job     │  │  RAG Match   │  │Cover Letter  │
 │   Parser    │  │  Fetcher   │  │   Engine     │  │  Generator   │
 │  (pypdf)    │  │(JSearch/CSV│  │              │  │  (Claude)    │
 └──────┬──────┘  └─────┬──────┘  │  ┌────────┐  │  └──────────────┘
-       │               │         │  │Sentence│  │
-       ▼               │         │  │ BERT   │  │
+│               │         │  │Sentence│  │
+▼               │         │  │ BERT   │  │
 ┌─────────────┐        │         │  │Embedder│  │
 │  Profile    │        │         │  └───┬────┘  │
 │ Extractor   │        │         │      │       │
 │  (Claude)   │        │         │  ┌───▼────┐  │
 └─────────────┘        │         │  │ChromaDB│  │
-                       │         │  │ Vector │  │
-                       │         │  │ Store  │  │
-                       │         │  └───┬────┘  │
-                       │         │      │       │
-                       │         │  ┌───▼────┐  │
-                       └─────────┤  │ Claude │  │
-                                 │  │Analyzer│  │
-                                 │  └────────┘  │
-                                 └──────────────┘
-```
+│         │  │ Vector │  │
+│         │  │ Store  │  │
+│         │  └───┬────┘  │
+│         │      │       │
+│         │  ┌───▼────┐  │
+└─────────┤  │ Claude │  │
+│  │Analyzer│  │
+│  └────────┘  │
+└──────────────┘
 
 ### RAG Pipeline (core matching logic)
-
-```
 Resume Text ──► Sentence-BERT ──► Resume Embedding (384-dim vector)
-                                          │
-                                          │ cosine similarity query
-                                          ▼
+│
+│ cosine similarity query
+▼
 Job Descriptions ──► Sentence-BERT ──► ChromaDB Vector Store
-                                          │
-                                          │ top-k retrieval
-                                          ▼
-                                   Matched Jobs + Resume
-                                          │
-                                          │ detailed analysis prompt
-                                          ▼
-                                    Claude Sonnet 4
-                                          │
-                                          ▼
-                              Match Score + Skill Gaps
-                              + Reasoning + Cover Letter
-```
+│
+│ top-k retrieval
+▼
+Matched Jobs + Resume
+│
+│ detailed analysis prompt
+▼
+Claude Sonnet 4
+│
+▼
+Match Score + Skill Gaps
++ Reasoning + Cover Letter
 
 **Why RAG instead of just sending everything to an LLM?**
 
@@ -105,7 +99,6 @@ Job Descriptions ──► Sentence-BERT ──► ChromaDB Vector Store
 ## ⚡ Quick Start
 
 ### 1. Clone and install
-
 ```bash
 git clone https://github.com/Sanjay-Kandimalla/rag-job-search-agent.git
 cd rag-job-search-agent
@@ -113,7 +106,6 @@ pip install -r requirements.txt
 ```
 
 ### 2. Set your API key
-
 ```bash
 cp .env.example .env
 # Edit .env and add your Anthropic API key
@@ -122,7 +114,6 @@ export ANTHROPIC_API_KEY=your_key_here
 ```
 
 ### 3. Run
-
 ```bash
 streamlit run app.py
 ```
@@ -130,7 +121,6 @@ streamlit run app.py
 Open `http://localhost:8501` and you're live.
 
 ### Docker (alternative)
-
 ```bash
 docker compose up --build
 ```
@@ -149,8 +139,6 @@ docker compose up --build
 ---
 
 ## 📁 Project Structure
-
-```
 rag-job-search-agent/
 │
 ├── app.py                        # Streamlit UI — entry point
@@ -174,12 +162,10 @@ rag-job-search-agent/
 ├── .env.example                  # Environment variable template
 ├── .streamlit/config.toml        # Streamlit theme config
 └── README.md                     # You are here
-```
 
 ---
 
 ## 🧪 Testing
-
 ```bash
 pip install pytest ruff
 pytest tests/ -v          # Run test suite
