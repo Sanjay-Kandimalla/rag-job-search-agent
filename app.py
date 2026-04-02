@@ -7,11 +7,10 @@ skill gap analysis, and tailored cover letter drafts.
 Built with: Streamlit, LangChain, Anthropic Claude, ChromaDB, Sentence-BERT
 """
 
-import streamlit as st
 import os
-import json
-import tempfile
-from pathlib import Path
+
+import streamlit as st
+
 
 # --- Page Config ---
 st.set_page_config(
