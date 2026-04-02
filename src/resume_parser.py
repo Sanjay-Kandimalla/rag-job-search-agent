@@ -3,6 +3,7 @@ Resume Parser - Extracts raw text from uploaded resume files (PDF or TXT).
 """
 
 import io
+
 from pypdf import PdfReader
 
 
