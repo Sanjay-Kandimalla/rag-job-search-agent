@@ -5,7 +5,6 @@ Job Fetcher - Search for jobs via JSearch API or parse from CSV upload.
 import os
 import csv
 import io
-import json
 import requests
 from typing import Optional
 
