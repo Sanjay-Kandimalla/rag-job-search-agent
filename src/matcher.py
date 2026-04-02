@@ -9,15 +9,15 @@ This is the core RAG pipeline:
 4. Use Claude to do detailed match scoring with skill gap analysis
 """
 
-import os
-import json
 import hashlib
+import json
+import os
 from typing import Optional
 
 import chromadb
+from anthropic import Anthropic
 from chromadb.config import Settings
 from sentence_transformers import SentenceTransformer
-from anthropic import Anthropic
 
 
 # Load embedding model (cached after first load)
@@ -169,7 +169,6 @@ def match_jobs(
     for batch_start in range(0, len(matched_jobs), batch_size):
         batch_end = min(batch_start + batch_size, len(matched_jobs))
         batch_jobs = matched_jobs[batch_start:batch_end]
-        batch_indices = matched_indices[batch_start:batch_end]
 
         # Format jobs for the prompt
         jobs_text = ""
