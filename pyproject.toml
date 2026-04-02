@@ -1,0 +1,19 @@
+[project]
+name = "rag-job-search-agent"
+version = "1.0.0"
+description = "AI-powered job matching and cover letter generator using RAG"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [{name = "Sanjay Kandimalla", email = "sanjay.kandimalla2025@gmail.com"}]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
