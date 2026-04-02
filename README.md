@@ -1,3 +1,4 @@
+# 🎯 RAG Job Search Agent
 
 **AI-powered job matching and cover letter generator using RAG (Retrieval-Augmented Generation)**
 
@@ -26,52 +27,25 @@ Most job seekers apply to hundreds of postings blindly. This tool uses **semanti
 ---
 
 ## 🏗️ Architecture
-┌─────────────────────────────────────────────────────────────────┐
-│                        STREAMLIT UI                             │
-│   Resume Upload │ Job Search │ Match Results │ Cover Letters    │
-└────────┬────────┴─────┬──────┴──────┬────────┴───────┬──────────┘
-│              │             │                │
-▼              ▼             ▼                ▼
-┌─────────────┐  ┌────────────┐  ┌──────────────┐  ┌──────────────┐
-│   Resume    │  │    Job     │  │  RAG Match   │  │Cover Letter  │
-│   Parser    │  │  Fetcher   │  │   Engine     │  │  Generator   │
-│  (pypdf)    │  │(JSearch/CSV│  │              │  │  (Claude)    │
-└──────┬──────┘  └─────┬──────┘  │  ┌────────┐  │  └──────────────┘
-│               │         │  │Sentence│  │
-▼               │         │  │ BERT   │  │
-┌─────────────┐        │         │  │Embedder│  │
-│  Profile    │        │         │  └───┬────┘  │
-│ Extractor   │        │         │      │       │
-│  (Claude)   │        │         │  ┌───▼────┐  │
-└─────────────┘        │         │  │ChromaDB│  │
-│         │  │ Vector │  │
-│         │  │ Store  │  │
-│         │  └───┬────┘  │
-│         │      │       │
-│         │  ┌───▼────┐  │
-└─────────┤  │ Claude │  │
-│  │Analyzer│  │
-│  └────────┘  │
-└──────────────┘
 
-### RAG Pipeline (core matching logic)
-Resume Text ──► Sentence-BERT ──► Resume Embedding (384-dim vector)
-│
-│ cosine similarity query
-▼
-Job Descriptions ──► Sentence-BERT ──► ChromaDB Vector Store
-│
-│ top-k retrieval
-▼
-Matched Jobs + Resume
-│
-│ detailed analysis prompt
-▼
-Claude Sonnet 4
-│
-▼
-Match Score + Skill Gaps
-+ Reasoning + Cover Letter
+**System Overview:**
+
+| Component | Role | Technology |
+|---|---|---|
+| **Streamlit UI** | Resume upload, job search, results display, cover letter view | Streamlit |
+| **Resume Parser** | Extracts raw text from PDF/TXT files | pypdf |
+| **Profile Extractor** | Pulls structured skills, experience, education from resume text | Claude API |
+| **Job Fetcher** | Searches live jobs or parses uploaded CSV | JSearch API / CSV |
+| **RAG Match Engine** | Embeds resume + jobs, retrieves similar jobs, scores matches | Sentence-BERT + ChromaDB + Claude |
+| **Cover Letter Generator** | Writes tailored cover letters per job match | Claude API |
+
+**RAG Pipeline Flow:**
+
+> **Resume Text** → Sentence-BERT → **384-dim embedding** → cosine similarity query against ChromaDB
+>
+> **Job Descriptions** → Sentence-BERT → **ChromaDB Vector Store** → top-k retrieval
+>
+> **Top Matches + Resume** → Claude Sonnet 4 → **Match Score + Skill Gaps + Reasoning**
 
 **Why RAG instead of just sending everything to an LLM?**
 
@@ -139,29 +113,22 @@ docker compose up --build
 ---
 
 ## 📁 Project Structure
-rag-job-search-agent/
-│
-├── app.py                        # Streamlit UI — entry point
-├── src/
-│   ├── resume_parser.py          # PDF/TXT text extraction
-│   ├── profile_extractor.py      # Claude-powered skill/experience extraction
-│   ├── job_fetcher.py            # JSearch API client + CSV parser
-│   ├── matcher.py                # ⭐ RAG pipeline: SBERT → ChromaDB → Claude
-│   └── cover_letter.py           # Tailored cover letter generation
-│
-├── tests/
-│   └── test_core.py              # Unit tests for all modules
-│
-├── data/
-│   └── sample_jobs.csv           # 10 sample job postings for demo
-│
-├── .github/workflows/ci.yml     # CI: lint + test + Docker build
-├── Dockerfile                    # Production container
-├── docker-compose.yml            # Local dev with Docker
-├── requirements.txt              # Python dependencies
-├── .env.example                  # Environment variable template
-├── .streamlit/config.toml        # Streamlit theme config
-└── README.md                     # You are here
+
+| File | Purpose |
+|---|---|
+| `app.py` | Streamlit UI — entry point |
+| `src/resume_parser.py` | PDF/TXT text extraction |
+| `src/profile_extractor.py` | Claude-powered skill/experience extraction |
+| `src/job_fetcher.py` | JSearch API client + CSV parser |
+| `src/matcher.py` | ⭐ RAG pipeline: SBERT → ChromaDB → Claude |
+| `src/cover_letter.py` | Tailored cover letter generation |
+| `tests/test_core.py` | Unit tests for all modules |
+| `data/sample_jobs.csv` | 10 sample job postings for demo |
+| `.github/workflows/ci.yml` | CI: lint + test + Docker build |
+| `Dockerfile` | Production container |
+| `docker-compose.yml` | Local dev with Docker |
+| `requirements.txt` | Python dependencies |
+| `.env.example` | Environment variable template |
 
 ---
 
